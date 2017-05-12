@@ -25,9 +25,9 @@ app.all('/*', function(req, res, next) {
 // Only the requests that start with /api/v1/* will be checked for the token.
 // Any URL's that do not follow the below pattern should be avoided unless you 
 // are sure that authentication is not needed
-app.all('/api/v1/*', [require('./middlewares/validateRequest')]);
+app.all('/api/v1/*', [require('middlewares/validateRequest')]);
 
-app.use('/', require('./routes'));
+app.use('/', require('routes'));
 
 // If no route is matched by now, it must be a 404
 app.use(function(req, res, next) {
@@ -36,9 +36,15 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-// Start the server
-app.set('port', process.env.PORT || 3000);
+var server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080
+var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1'
 
-var server = app.listen(app.get('port'), function() {
-  console.log('Express server listening on port ' + server.address().port);
+app.listen(server_port, server_ip_address, function(){
+  console.log("Listening on " + server_ip_address + ", server_port " + server_port)
 });
+// // Start the server
+// app.set('port', process.env.PORT || 3000);
+
+// var server = app.listen(app.get('port'), function() {
+//   console.log('Express server listening on port ' + server.address().port);
+// });
